@@ -1,2 +1,3 @@
 SAFMC 2022 D1 Codebase
-Jit,Soon Yee, Jun Jie, Aaron, Davis
+
+for enquiries contact (probably in this order): Jit, Jun Jie, Soon Yee, Aaron, Davis
