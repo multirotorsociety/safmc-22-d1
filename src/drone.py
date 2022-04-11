@@ -2,7 +2,6 @@
 from json.decoder import JSONDecodeError
 import rospy
 # import math
-from std_msgs.msg import String
 from mavros_msgs.msg import PositionTarget, State
 from mavros_msgs.srv import CommandBool, SetMode
 from geometry_msgs.msg import PoseStamped, TwistStamped
@@ -38,6 +37,7 @@ class Drone:
         '''
         self.local_target_pub = rospy.Publisher('mavros/setpoint_raw/local', PositionTarget, queue_size=10)
         self.vel_pub = rospy.Publisher('mavros/setpoint_velocity/cmd_vel', TwistStamped, queue_size=10)
+        self.gpio_pub = rospy.Publisher('/gpio',CommandBool,queue_size=10)
         
         '''
         ros services

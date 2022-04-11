@@ -13,7 +13,8 @@ import serial, time, guli
 from pynput.keyboard import Controller
 
 # Initialising Variables #
-arduino = serial.Serial(port='/dev/ttyUSB0', baudrate=9600, timeout=1)
+arduino = serial.Serial(port='/dev/ttyUSB0', baudrate=9600, timeout=1) # Linux COM Port
+#arduino = serial.Serial(port='COM12', baudrate=9600, timeout=1)
 keyboard = Controller()
 p=0
 r=0
@@ -31,28 +32,38 @@ guli.GuliVariable("r").setValue(0.0)
 
 def readArduinoInputs():
 	global p,r
+	np=0
+	nr=0
 	data = arduino.readline()
 	# Data Processing #
 	stateMode = data.decode().strip()   # F,B,L,R,N,1(Rear Left),3(Rear right),7(Front left),9(Front Right)
-	if stateMode == 'F' or stateMode == '7' or stateMode == '9':
-		np = 1
-	elif stateMode == 'B' or stateMode == '1' or stateMode == '3':
-		np = -1
-	if stateMode == 'L' or stateMode == '1' or stateMode == '7':
-		nr = 1
-	elif stateMode == 'R' or stateMode == '3' or stateMode == '9':
-		nr = -1
-	if stateMode == 'N':
-		np=0
-		nr=0
-	if not np == p:
-		print("pitch" +  str(np))
-		guli.GuliVariable("p").setValue(np)
-		p = np
-	if not nr == r:
-		print("roll" +  str(np))
-		guli.GuliVariable("r").setValue(nr)
-		r = nr
+	if stateMode == 'X': # Not Receiving Inputs from Glove
+		print("IMU Disconnected")
+		guli.GuliVariable("p").setValue(0.0)
+		guli.GuliVariable("r").setValue(0.0)
+		guli.GuliVariable("a").setValue(-1.0)
+		guli.GuliVariable("y").setValue(0.0)
+	else:
+		print(stateMode)	
+		if stateMode == 'F' or stateMode == '7' or stateMode == '9':
+			np = 1
+		elif stateMode == 'B' or stateMode == '1' or stateMode == '3':
+			np = -1
+		if stateMode == 'L' or stateMode == '1' or stateMode == '7':
+			nr = 1
+		elif stateMode == 'R' or stateMode == '3' or stateMode == '9':
+			nr = -1
+		if stateMode == 'N':
+			np=0
+			nr=0
+		if not np == p:
+			#print("pitch" +  str(np))
+			guli.GuliVariable("p").setValue(np)
+			p = np
+		if not nr == r:
+			#print("roll" +  str(np))
+			guli.GuliVariable("r").setValue(nr)
+			r = nr
 #=====================================
 
 #  Main Program Function
