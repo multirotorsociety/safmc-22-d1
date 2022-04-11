@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-import RPi.GPIO as GPIO
+from gpiozero import LED
 import rospy
 from std_msgs.msg import Bool
-
+x=LED(16)
 class Drone:
     def __init__(self):
         '''
@@ -12,7 +12,9 @@ class Drone:
         rospy.loginfo("Drone initialized!")
     # Callback functions
     def gpio_callback(self, msg):
-        GPIO.output(23,msg.data)
+        x.value = msg.data
+
+
 def main():
     rospy.init_node('rpi_node', anonymous=True)
     drone = Drone()
