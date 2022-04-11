@@ -6,6 +6,7 @@ from mavros_msgs.msg import PositionTarget, State
 from mavros_msgs.srv import CommandBool, SetMode
 from geometry_msgs.msg import PoseStamped, TwistStamped
 from pyquaternion import Quaternion
+from std_msgs.msg import Bool
 import time, guli
 
 
@@ -37,7 +38,7 @@ class Drone:
         '''
         self.local_target_pub = rospy.Publisher('mavros/setpoint_raw/local', PositionTarget, queue_size=10)
         self.vel_pub = rospy.Publisher('mavros/setpoint_velocity/cmd_vel', TwistStamped, queue_size=10)
-        self.gpio_pub = rospy.Publisher('/gpio',CommandBool,queue_size=10)
+        self.gpio_pub = rospy.Publisher('/gpio', Bool,queue_size=10)
         
         '''
         ros services
@@ -54,6 +55,7 @@ class Drone:
                 print("Waiting for initialization.")
                 time.sleep(0.5)
 
+        print('up')
         self.target_msg = self.construct_vel_target(0, 0, 1)
         for i in range(10):
             self.local_target_pub.publish(self.target_msg)
@@ -61,14 +63,9 @@ class Drone:
             self.offboard_state = self.offboard()
             time.sleep(0.2)
 
-        print('up')
-        for i in range(15):
-            self.target_msg = self.construct_vel_target(0, 0, 1)
-            self.local_target_pub.publish(self.target_msg)
-            time.sleep(0.4)
-
+        
         print('done up')
-        for i in range(10):
+        for i in range(5):
             self.target_msg = self.construct_vel_target(0, 0, 0)
             self.local_target_pub.publish(self.target_msg)
             time.sleep(0.2)
